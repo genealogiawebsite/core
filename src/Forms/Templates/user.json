@@ -66,31 +66,6 @@
                         "type": "input",
                         "content": "email"
                     }
-                },
-                {
-                    "label": "Group",
-                    "name": "group_id",
-                    "value": null,
-                    "column": 3,
-                    "meta": {
-                        "custom": true,
-                        "type": "select",
-                        "multiple": false,
-                        "options": [],
-                        "source": "administration.userGroups.options"
-                    }
-                },
-                {
-                    "label": "Role",
-                    "name": "role_id",
-                    "value": null,
-                    "column": 3,
-                    "meta": {
-                        "custom": true,
-                        "type": "select",
-                        "options": [],
-                        "source": "system.roles.options"
-                    }
                 }
             ]
         },
