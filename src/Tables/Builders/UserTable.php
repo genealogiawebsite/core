@@ -30,7 +30,7 @@ class UserTable implements Table
                 ->join('user_groups', 'users.group_id', '=', 'user_groups.id')
                 ->join('roles', 'users.role_id', '=', 'roles.id');
         } else {
-            return User::where('user.id', $auth->id)
+            return User::where('users.id', $auth->id)
                 ->with('person:id,appellative,name', 'avatar:id,user_id')
                 ->selectRaw('
                 users.id, user_groups.name as "group", people.name, people.appellative,
