@@ -18,7 +18,7 @@ class UserTable implements Table
 
         $auth = Auth::user();
 
-        if ($auth->isAdmin() || $auth->isSupervisor()) {
+        if ($auth->isAdmin()) {
 
 
             return User::with('person:id,appellative,name', 'avatar:id,user_id')

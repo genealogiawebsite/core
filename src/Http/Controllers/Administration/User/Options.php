@@ -21,7 +21,7 @@ class Options extends Controller
 
         $user = Auth::user();
 
-        if ($user->isAdmin() || $user->isSupervisor()) {
+        if ($user->isAdmin()) {
             return User::active()
                 ->with(['person:id,appellative,name', 'avatar:id,user_id']);
         }

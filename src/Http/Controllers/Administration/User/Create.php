@@ -14,7 +14,7 @@ class Create extends Controller
 
         $user = Auth::user();
 
-        if ($user->person->id === $person->id || $user->isAdmin() || $user->isSupervisor()) {
+        if ($user->isAdmin()) {
             return ['form' => $form->create($person)];
         }
 

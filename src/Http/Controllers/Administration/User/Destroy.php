@@ -13,7 +13,8 @@ class Destroy extends Controller
 
     public function __invoke(Request $request, User $user)
     {
-        if ($user->isAdmin() || $user->isSupervisor()) {
+        $auth = Auth::user();
+        if ($user->id === $auth->id || $auth->isAdmin()) {
 
 
             $this->authorize('handle', $user);

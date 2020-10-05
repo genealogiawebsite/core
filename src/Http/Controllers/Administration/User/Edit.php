@@ -14,7 +14,7 @@ class Edit extends Controller
 
         $auth = Auth::user();
 
-        if ($user->id === $auth->id || $user->isAdmin() || $user->isSupervisor()) {
+        if ($user->id === $auth->id || $auth->isAdmin()) {
             return ['form' => $form->edit($user)];
         }
 

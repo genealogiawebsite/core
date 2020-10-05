@@ -18,7 +18,7 @@ class Update extends Controller
     {
         $auth = Auth::user();
 
-        if ($user->id === $auth->id || $user->isAdmin() || $user->isSupervisor()) {
+        if ($user->id === $auth->id || $auth->isAdmin()) {
 
 
             $this->authorize('handle', $user);
