@@ -11,11 +11,6 @@ class Edit extends Controller
 {
     public function __invoke(User $user, UserForm $form)
     {
-        return ['form' => $form->edit($user)];
-    }
-
-    public function __invoke(User $user, UserForm $form)
-    {
 
         $auth = Auth::user();
 
