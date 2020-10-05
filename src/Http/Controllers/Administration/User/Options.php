@@ -19,9 +19,6 @@ class Options extends Controller
     public function query()
     {
 
-        public function __invoke(Person $person, UserForm $form)
-    {
-
         $user = Auth::user();
 
         if ($user->isAdmin() || $user->isSupervisor()) {
