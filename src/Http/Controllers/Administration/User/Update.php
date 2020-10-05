@@ -3,6 +3,7 @@
 namespace LaravelEnso\Core\Http\Controllers\Administration\User;
 
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
