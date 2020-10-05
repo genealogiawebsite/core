@@ -16,29 +16,43 @@ class Update extends Controller
 
     public function __invoke(ValidateUserRequest $request, User $user)
     {
-        $this->authorize('handle', $user);
+        $auth = Auth::user();
 
-        if ($request->filled('password')) {
-            $this->authorize('change-password', $user);
-            $user->password = bcrypt($request->get('password'));
+        if ($user->id === $auth->id || $user->isAdmin() || $user->isSupervisor()) {
+
+
+            $this->authorize('handle', $user);
+
+            if ($request->filled('password')) {
+                $this->authorize('change-password', $user);
+                $user->password = bcrypt($request->get('password'));
+            }
+
+            $user->fill($request->validated());
+
+            if ($user->isDirty('group_id')) {
+                $this->authorize('change-group', $user);
+            }
+
+            if ($user->isDirty('role_id')) {
+                $this->authorize('change-role', $user);
+            }
+
+            $user->save();
+
+            if ((new Collection($user->getChanges()))->keys()->contains('password')) {
+                Event::dispatch(new PasswordReset($user));
+            }
+
+            return ['message' => __('The user was successfully updated')];
+
         }
 
-        $user->fill($request->validated());
-
-        if ($user->isDirty('group_id')) {
-            $this->authorize('change-group', $user);
+        else{
+            return [
+                'message' => ('You do not have permission to update this user.'),
+                'redirect' => 'administration.users.index',
+            ];
         }
-
-        if ($user->isDirty('role_id')) {
-            $this->authorize('change-role', $user);
-        }
-
-        $user->save();
-
-        if ((new Collection($user->getChanges()))->keys()->contains('password')) {
-            Event::dispatch(new PasswordReset($user));
-        }
-
-        return ['message' => __('The user was successfully updated')];
     }
 }

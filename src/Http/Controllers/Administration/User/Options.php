@@ -3,6 +3,7 @@
 namespace LaravelEnso\Core\Http\Controllers\Administration\User;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use LaravelEnso\Core\Http\Resources\User as Resource;
 use LaravelEnso\Core\Models\User;
 use LaravelEnso\Select\Traits\OptionsBuilder;
@@ -17,7 +18,17 @@ class Options extends Controller
 
     public function query()
     {
-        return User::active()
-            ->with(['person:id,appellative,name', 'avatar:id,user_id']);
+
+        public function __invoke(Person $person, UserForm $form)
+    {
+
+        $user = Auth::user();
+
+        if ($user->isAdmin() || $user->isSupervisor()) {
+            return User::active()
+                ->with(['person:id,appellative,name', 'avatar:id,user_id']);
+        }
+
+
     }
 }
