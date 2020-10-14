@@ -4,6 +4,7 @@ namespace LaravelEnso\Core\Models;
 
 use Exception;
 use Illuminate\Contracts\Translation\HasLocalePreference;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\App;
@@ -38,6 +39,7 @@ class User extends Authenticatable implements Activatable, HasLocalePreference
         CascadesMorphMap,
         HasApiTokens,
         HasAvatar,
+        HasFactory,
         HasPassword,
         Impersonates,
         IsPerson,
