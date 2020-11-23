@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use LaravelEnso\Core\Enums\Themes;
+use LaravelEnso\Core\Facades\Websockets;
 use LaravelEnso\Core\Http\Resources\User;
 use LaravelEnso\Core\Services\Inspiring;
 use LaravelEnso\Core\Services\LocalState;
@@ -20,7 +21,6 @@ use LaravelEnso\Localisation\Models\Language;
 use LaravelEnso\Menus\Http\Resources\Menu;
 use LaravelEnso\Menus\Services\TreeBuilder;
 use LaravelEnso\Permissions\Models\Permission;
-use LaravelEnso\Roles\Enums\Roles;
 use LaravelEnso\Roles\Models\Role;
 
 class AppState implements Responsable
@@ -38,7 +38,7 @@ class AppState implements Responsable
     protected function response(): array
     {
         return [
-            'user' => new User(Auth::user()->load(['person', 'avatar', 'role', 'group'])),
+            'user' => new User(Auth::user()),
             'preferences' => Auth::user()->preferences(),
             'i18n' => $this->i18n(),
             'languages' => $this->languages->pluck('flag', 'name'),
@@ -53,12 +53,7 @@ class AppState implements Responsable
                     'key' => Config::get('broadcasting.connections.pusher.key'),
                     'options' => Config::get('broadcasting.connections.pusher.options'),
                 ],
-                'channels' => [
-                    'privateChannel' => $this->privateChannel(),
-                    'ioChannel' => $this->ioChannel(),
-                    'appUpdates' => 'app-updates',
-                    'taskChannel' => 'tasks.'.Auth::user()->id,
-                ],
+                'channels' => Websockets::all(),
             ],
             'meta' => $this->meta(),
             'enums' => Enums::all(),
@@ -123,24 +118,10 @@ class AppState implements Responsable
             : null;
     }
 
-    protected function privateChannel(): string
-    {
-        return (new Collection(
-            explode('\\', Config::get('auth.providers.users.model'))
-        ))->push(Auth::user()->id)->implode('.');
-    }
-
-    protected function ioChannel(): string
-    {
-        $roles = App::make(Roles::class);
-
-        return in_array(Auth::user()->role_id, [$roles::Admin, $roles::Supervisor])
-            ? 'operations'
-            : 'operations.'.Auth::user()->id;
-    }
-
     protected function prepare(): void
     {
+        Auth::user()->load(['person', 'avatar', 'role', 'group']);
+
         $this->role = Auth::user()->role()
             ->with('menu.permission', 'permissions')->first();
 
